@@ -31,7 +31,6 @@
   * { margin:0; padding:0; box-sizing:border-box; }
   html, body { height:100%; overflow:hidden; font-family:'Syne',sans-serif; background:var(--bg); color:var(--text); }
 
-  /* ── Header ── */
   header {
     position:fixed; top:0; left:0; right:0; z-index:1000;
     background:rgba(7,11,24,.95); backdrop-filter:blur(12px);
@@ -46,43 +45,35 @@
   }
   .title-block { flex:1; min-width:0; }
   .title-block h1 { font-size:15px; font-weight:800; line-height:1; }
-  .title-block p { font-size:9px; color:var(--text-muted); margin-top:2px; font-family:'Space Mono',monospace; }
+  .title-block p  { font-size:9px; color:var(--text-muted); margin-top:2px; font-family:'Space Mono',monospace; }
 
-  /* GPS button */
   .gps-btn {
-    flex-shrink:0;
-    display:flex; align-items:center; gap:6px;
+    flex-shrink:0; display:flex; align-items:center; gap:6px;
     padding:7px 12px; border-radius:20px;
     font-size:11px; font-weight:700; font-family:'Space Mono',monospace;
     border:1.5px solid var(--border); cursor:pointer;
     transition:all .25s; background:var(--surface2); color:var(--text-muted);
-    letter-spacing:.5px;
   }
   .gps-btn.active { border-color:var(--accent-ida); color:var(--accent-ida); background:rgba(0,201,167,.1); }
   .gps-btn.active .gps-dot { background:var(--accent-ida); animation:blink 1.5s infinite; }
   .gps-dot { width:7px; height:7px; border-radius:50%; background:var(--text-muted); transition:background .25s; }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
 
-  /* Tabs */
   .tabs { display:flex; gap:4px; overflow-x:auto; scrollbar-width:none; }
   .tabs::-webkit-scrollbar { display:none; }
   .tab {
-    flex-shrink:0; padding:8px 14px;
-    font-size:11px; font-weight:600; letter-spacing:.5px;
+    flex-shrink:0; padding:8px 14px; font-size:11px; font-weight:600;
     border:none; background:transparent; cursor:pointer;
     color:var(--text-muted); border-bottom:2px solid transparent;
-    transition:all .2s; font-family:'Syne',sans-serif;
-    position:relative; bottom:-1px;
+    transition:all .2s; font-family:'Syne',sans-serif; position:relative; bottom:-1px;
   }
-  .tab.active-ida { color:var(--accent-ida); border-bottom-color:var(--accent-ida); }
+  .tab.active-ida    { color:var(--accent-ida);    border-bottom-color:var(--accent-ida); }
   .tab.active-vuelta { color:var(--accent-vuelta); border-bottom-color:var(--accent-vuelta); }
 
-  /* ── Alert distance bar ── */
   .alert-bar {
     position:fixed; top:110px; left:0; right:0; z-index:999;
     display:flex; align-items:center; gap:8px;
-    padding:6px 16px; background:var(--surface);
-    border-bottom:1px solid var(--border);
+    padding:6px 16px; background:var(--surface); border-bottom:1px solid var(--border);
     font-size:11px; font-family:'Space Mono',monospace; color:var(--text-muted);
   }
   .dist-btn {
@@ -93,7 +84,6 @@
   }
   .dist-btn.sel { background:var(--alert-warn); color:#000; border-color:var(--alert-warn); }
 
-  /* ── Alert banner ── */
   .alert-banner {
     position:fixed; top:0; left:0; right:0; z-index:9999;
     transform:translateY(-110%); transition:transform .4s cubic-bezier(.34,1.56,.64,1);
@@ -104,20 +94,19 @@
     display:flex; flex-direction:column; gap:6px;
     box-shadow:0 12px 40px rgba(0,0,0,.8);
   }
-  .alert-inner.warn  { background:#7c2d12; border:2px solid var(--alert-warn); }
-  .alert-inner.danger{ background:#450a0a; border:2px solid var(--alert-danger); animation:shake .5s; }
+  .alert-inner.warn   { background:#7c2d12; border:2px solid var(--alert-warn); }
+  .alert-inner.danger { background:#450a0a; border:2px solid var(--alert-danger); animation:shake .5s; }
   @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
-  .alert-row { display:flex; justify-content:space-between; align-items:flex-start; }
+  .alert-row   { display:flex; justify-content:space-between; align-items:flex-start; }
   .alert-title { font-size:20px; font-weight:800; }
   .alert-stop  { font-size:13px; font-family:'Space Mono',monospace; opacity:.85; margin-top:2px; }
-  .alert-dist  { font-size:32px; font-weight:800; font-family:'Space Mono',monospace; letter-spacing:-1px; }
+  .alert-dist  { font-size:32px; font-weight:800; font-family:'Space Mono',monospace; }
   .alert-close {
     background:rgba(255,255,255,.15); border:none; color:#fff;
     padding:5px 14px; border-radius:8px; font-size:12px; cursor:pointer;
     font-family:'Space Mono',monospace;
   }
 
-  /* ── GPS status strip ── */
   .gps-status {
     position:absolute; bottom:200px; left:0; right:0; z-index:800;
     background:rgba(7,11,24,.9); border-top:1px solid var(--border);
@@ -130,16 +119,11 @@
   .next-name  { color:var(--accent-stop); font-weight:700; max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .dist-label { font-size:14px; font-weight:700; }
 
-  /* ── Main ── */
-  main {
-    position:fixed; top:142px; bottom:0; left:0; right:0;
-    display:flex; flex-direction:column;
-  }
+  main { position:fixed; top:142px; bottom:0; left:0; right:0; display:flex; flex-direction:column; }
   #map { flex:1; width:100%; background:#0a0f1e; }
   .leaflet-tile { filter:brightness(.45) saturate(.6) hue-rotate(210deg); }
   .leaflet-container { background:#070b18; }
 
-  /* ── Drawer ── */
   .drawer {
     background:var(--surface); border-top:1px solid var(--border);
     height:200px; overflow-y:auto;
@@ -157,11 +141,11 @@
     padding:9px 16px; border-bottom:1px solid rgba(30,45,82,.5);
     cursor:pointer; transition:background .15s;
   }
-  .stop-item:hover    { background:var(--surface2); }
-  .stop-item.active   { background:var(--pill-active); }
-  .stop-item.origin   { background:rgba(0,201,167,.08); }
+  .stop-item:hover       { background:var(--surface2); }
+  .stop-item.active      { background:var(--pill-active); }
+  .stop-item.origin      { background:rgba(0,201,167,.08); }
   .stop-item.destination { background:rgba(249,115,22,.08); }
-  .stop-item.nearby   { background:rgba(245,158,11,.1); }
+  .stop-item.nearby      { background:rgba(245,158,11,.1); }
   .stop-num  { font-family:'Space Mono',monospace; font-size:10px; color:var(--text-muted); width:20px; text-align:right; flex-shrink:0; }
   .stop-dot  { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
   .stop-name { font-size:12px; font-weight:600; flex:1; }
@@ -169,11 +153,10 @@
     font-size:9px; font-family:'Space Mono',monospace;
     padding:2px 6px; border-radius:3px; flex-shrink:0; font-weight:700; letter-spacing:.5px;
   }
-  .badge-origin { background:rgba(0,201,167,.2); color:var(--accent-ida); }
-  .badge-dest   { background:rgba(249,115,22,.2); color:var(--accent-vuelta); }
+  .badge-origin { background:rgba(0,201,167,.2);  color:var(--accent-ida); }
+  .badge-dest   { background:rgba(249,115,22,.2);  color:var(--accent-vuelta); }
   .badge-key    { background:rgba(251,191,36,.15); color:var(--accent-stop); }
 
-  /* Markers */
   .marker-origin, .marker-dest {
     display:flex; align-items:center; justify-content:center;
     width:32px; height:32px; border-radius:50%;
@@ -181,12 +164,10 @@
     border:2px solid white; box-shadow:0 0 16px rgba(0,0,0,.8);
   }
   .marker-you {
-    width:18px; height:18px; border-radius:50%; background:#3b82f6;
-    border:3px solid #fff;
+    width:18px; height:18px; border-radius:50%; background:#3b82f6; border:3px solid #fff;
     box-shadow:0 0 0 5px rgba(59,130,246,.25), 0 0 18px rgba(59,130,246,.6);
   }
 
-  /* Popup */
   .leaflet-popup-content-wrapper {
     background:var(--surface2) !important; border:1px solid var(--border) !important;
     border-radius:8px !important; box-shadow:0 8px 32px rgba(0,0,0,.6) !important;
@@ -203,7 +184,6 @@
 </head>
 <body>
 
-<!-- ── Alert Banner ── -->
 <div class="alert-banner" id="alert-banner">
   <div class="alert-inner warn" id="alert-inner">
     <div class="alert-row">
@@ -265,12 +245,14 @@
 
 <script>
 // ── Data ──────────────────────────────────────────────────────────────────────
+
+// 183 IDA: Bv. Artigas & Pedernal → Fac. Arquitectura
 const STOPS_IDA = [
-  { n:1,  name:"Bv. Artigas & Pedernal",           lat:-34.8765, lng:-56.1670, key:"origin", badge:"ORIGEN"  },
+  { n:1,  name:"Bv. Artigas & Pedernal",           lat:-34.8765, lng:-56.1670, key:"origin",  badge:"SUBIDA"  },
   { n:2,  name:"Bv. Artigas & Melián Lafinur",     lat:-34.8780, lng:-56.1667 },
   { n:3,  name:"Bv. Artigas & Gallinal",           lat:-34.8800, lng:-56.1664 },
   { n:4,  name:"Bv. Artigas & Jackson",            lat:-34.8825, lng:-56.1660 },
-  { n:5,  name:"Bv. Artigas & Av. Italia",         lat:-34.8855, lng:-56.1655, key:"notable", badge:"ITALIA" },
+  { n:5,  name:"Bv. Artigas & Av. Italia",         lat:-34.8855, lng:-56.1655, key:"notable", badge:"ITALIA"  },
   { n:6,  name:"Bv. Artigas & Canstatt",           lat:-34.8875, lng:-56.1652 },
   { n:7,  name:"Bv. Artigas & Garibaldi",          lat:-34.8895, lng:-56.1648 },
   { n:8,  name:"Bv. Artigas & Larrañaga",          lat:-34.8920, lng:-56.1644 },
@@ -279,10 +261,12 @@ const STOPS_IDA = [
   { n:11, name:"Bv. España & Guayabos",            lat:-34.9000, lng:-56.1610 },
   { n:12, name:"Bv. España & J.B. Blanco",         lat:-34.9020, lng:-56.1590 },
   { n:13, name:"Rbla. Rep. del Perú & Ellauri",    lat:-34.9045, lng:-56.1572 },
-  { n:14, name:"Fac. Arquitectura (Bv. Artigas)",  lat:-34.9068, lng:-56.1555, key:"dest",   badge:"BAJARSE" },
+  { n:14, name:"Fac. Arquitectura (Bv. Artigas)",  lat:-34.9068, lng:-56.1555, key:"dest",    badge:"BAJADA"  },
 ];
+
+// 181 VUELTA: Parada 3968 (Bv. España & Luis Franzini) → Bv. Artigas & Pedernal
 const STOPS_VUELTA = [
-  { n:1,  name:"Fac. Arquitectura (Bv. Artigas)",  lat:-34.9068, lng:-56.1555, key:"origin", badge:"ORIGEN"  },
+  { n:1,  name:"Bv. España & Luis Franzini",       lat:-34.9055, lng:-56.1640, key:"origin",  badge:"SUBIDA · #3968" },
   { n:2,  name:"Bv. España & J.B. Blanco",         lat:-34.9020, lng:-56.1590 },
   { n:3,  name:"Bv. España & Guayabos",            lat:-34.9000, lng:-56.1610 },
   { n:4,  name:"Bv. España & Ellauri",             lat:-34.8975, lng:-56.1622 },
@@ -290,11 +274,11 @@ const STOPS_VUELTA = [
   { n:6,  name:"Bv. Artigas & Larrañaga",          lat:-34.8920, lng:-56.1644 },
   { n:7,  name:"Bv. Artigas & Garibaldi",          lat:-34.8895, lng:-56.1648 },
   { n:8,  name:"Bv. Artigas & Canstatt",           lat:-34.8875, lng:-56.1652 },
-  { n:9,  name:"Bv. Artigas & Av. Italia",         lat:-34.8855, lng:-56.1655, key:"notable", badge:"ITALIA" },
+  { n:9,  name:"Bv. Artigas & Av. Italia",         lat:-34.8855, lng:-56.1655, key:"notable", badge:"ITALIA"  },
   { n:10, name:"Bv. Artigas & Jackson",            lat:-34.8825, lng:-56.1660 },
   { n:11, name:"Bv. Artigas & Gallinal",           lat:-34.8800, lng:-56.1664 },
   { n:12, name:"Bv. Artigas & Melián Lafinur",     lat:-34.8780, lng:-56.1667 },
-  { n:13, name:"Bv. Artigas & Pedernal",           lat:-34.8765, lng:-56.1670, key:"dest",   badge:"BAJARSE" },
+  { n:13, name:"Bv. Artigas & Pedernal",           lat:-34.8765, lng:-56.1670, key:"dest",    badge:"BAJADA"  },
 ];
 
 // ── State ─────────────────────────────────────────────────────────────────────
@@ -304,8 +288,8 @@ let gpsActive  = false;
 let watchId    = null;
 let userMarker = null;
 let accCircle  = null;
-let alerted    = false;   // alerta a alertDist metros
-let alertedUrgent = false; // alerta a 50m
+let alerted    = false;
+let alertedUrgent = false;
 let dismissed  = false;
 let polyline   = null;
 let stopMarkers = [];
@@ -314,12 +298,11 @@ let stopMarkers = [];
 const map = L.map('map', { zoomControl:true, attributionControl:false });
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom:19 }).addTo(map);
 
-// ── Haversine ─────────────────────────────────────────────────────────────────
-function dist(lat1, lng1, lat2, lng2) {
-  const R = 6371000, toR = Math.PI/180;
-  const dLat = (lat2-lat1)*toR, dLng = (lng2-lng1)*toR;
-  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*toR)*Math.cos(lat2*toR)*Math.sin(dLng/2)**2;
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+function dist(lat1,lng1,lat2,lng2) {
+  const R=6371000, r=Math.PI/180;
+  const dLat=(lat2-lat1)*r, dLng=(lng2-lng1)*r;
+  const a=Math.sin(dLat/2)**2+Math.cos(lat1*r)*Math.cos(lat2*r)*Math.sin(dLng/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
 }
 
 // ── GPS ───────────────────────────────────────────────────────────────────────
@@ -327,164 +310,150 @@ function toggleGPS() { gpsActive ? stopGPS() : startGPS(); }
 
 function startGPS() {
   if (!navigator.geolocation) { alert('Tu dispositivo no soporta GPS.'); return; }
-  gpsActive = true; alerted = false; alertedUrgent = false; dismissed = false;
+  gpsActive=true; alerted=false; alertedUrgent=false; dismissed=false;
   document.getElementById('gps-btn').classList.add('active');
-  document.getElementById('gps-label').textContent = 'ON';
+  document.getElementById('gps-label').textContent='ON';
   document.getElementById('gps-status').classList.add('on');
   watchId = navigator.geolocation.watchPosition(onPos, onErr, { enableHighAccuracy:true, maximumAge:3000, timeout:10000 });
 }
 
 function stopGPS() {
-  if (watchId !== null) { navigator.geolocation.clearWatch(watchId); watchId = null; }
-  gpsActive = false;
+  if (watchId!==null) { navigator.geolocation.clearWatch(watchId); watchId=null; }
+  gpsActive=false;
   document.getElementById('gps-btn').classList.remove('active');
-  document.getElementById('gps-label').textContent = 'GPS';
+  document.getElementById('gps-label').textContent='GPS';
   document.getElementById('gps-status').classList.remove('on');
-  document.getElementById('acc-label').textContent = '';
-  if (userMarker) { userMarker.remove(); userMarker = null; }
-  if (accCircle)  { accCircle.remove();  accCircle = null; }
+  document.getElementById('acc-label').textContent='';
+  if (userMarker) { userMarker.remove(); userMarker=null; }
+  if (accCircle)  { accCircle.remove();  accCircle=null; }
   dismissAlert();
 }
 
-function onErr() { document.getElementById('acc-label').textContent = '⚠ Sin señal'; }
+function onErr() { document.getElementById('acc-label').textContent='⚠ Sin señal'; }
 
 function onPos(pos) {
-  const { latitude:lat, longitude:lng, accuracy:acc } = pos.coords;
-  const stops = currentTab === 'ida' ? STOPS_IDA : STOPS_VUELTA;
-  const dest  = stops[stops.length - 1];
+  const {latitude:lat, longitude:lng, accuracy:acc} = pos.coords;
+  const stops = currentTab==='ida' ? STOPS_IDA : STOPS_VUELTA;
+  const dest  = stops[stops.length-1];
 
-  // User dot
-  const icon = L.divIcon({ className:'', html:'<div class="marker-you"></div>', iconSize:[18,18], iconAnchor:[9,9] });
+  const icon = L.divIcon({className:'',html:'<div class="marker-you"></div>',iconSize:[18,18],iconAnchor:[9,9]});
   if (!userMarker) userMarker = L.marker([lat,lng],{icon,zIndexOffset:1000}).addTo(map);
   else userMarker.setLatLng([lat,lng]);
   if (!accCircle) accCircle = L.circle([lat,lng],{radius:acc,color:'#3b82f6',fillColor:'#3b82f6',fillOpacity:.07,weight:1}).addTo(map);
   else accCircle.setLatLng([lat,lng]).setRadius(acc);
 
-  // Distances
   const distDest = dist(lat,lng,dest.lat,dest.lng);
 
-  // Closest stop
-  let closest = null, closestD = Infinity;
-  stops.forEach(s => { const d = dist(lat,lng,s.lat,s.lng); if(d<closestD){closestD=d;closest=s;} });
+  let closest=null, closestD=Infinity;
+  stops.forEach(s=>{ const d=dist(lat,lng,s.lat,s.lng); if(d<closestD){closestD=d;closest=s;} });
 
-  // Status bar
   document.getElementById('status-next').textContent = closest ? closest.name : '—';
-  document.getElementById('status-dist').textContent = distDest < 1000
-    ? Math.round(distDest) + 'm de tu parada'
-    : (distDest/1000).toFixed(1) + 'km de tu parada';
-  document.getElementById('acc-label').textContent = '±' + Math.round(acc) + 'm';
+  document.getElementById('status-dist').textContent = distDest<1000
+    ? Math.round(distDest)+'m de tu parada'
+    : (distDest/1000).toFixed(1)+'km de tu parada';
+  document.getElementById('acc-label').textContent = '±'+Math.round(acc)+'m';
 
-  // Highlight in list
-  document.querySelectorAll('.stop-item').forEach((el,i) => {
+  document.querySelectorAll('.stop-item').forEach((el,i)=>{
     el.classList.remove('nearby');
-    if (closest && stops[i] && stops[i].n === closest.n) el.classList.add('nearby');
+    if (closest && stops[i] && stops[i].n===closest.n) el.classList.add('nearby');
   });
 
-  // ── ALERTS ──
-  if (!alerted && distDest <= alertDist && distDest > 60) {
-    alerted = true;
-    fireAlert('warn', '⚠️ PREPARATE PARA BAJAR', dest.name, Math.round(distDest));
+  if (!alerted && distDest<=alertDist && distDest>60) {
+    alerted=true;
+    fireAlert('warn','⚠️ PREPARATE PARA BAJAR', dest.name, Math.round(distDest));
   }
-  if (!alertedUrgent && distDest <= 60) {
-    alertedUrgent = true;
-    fireAlert('danger', '🚨 ¡BAJATE AHORA!', dest.name, Math.round(distDest));
+  if (!alertedUrgent && distDest<=60) {
+    alertedUrgent=true;
+    fireAlert('danger','🚨 ¡BAJATE AHORA!', dest.name, Math.round(distDest));
   }
-  // Reset si se alejó (ej. equivocó de ómnibus)
-  if (distDest > alertDist + 150) { alerted = false; alertedUrgent = false; dismissed = false; }
+  if (distDest > alertDist+150) { alerted=false; alertedUrgent=false; dismissed=false; }
 }
 
-// ── Alert ─────────────────────────────────────────────────────────────────────
 function fireAlert(level, title, stopName, meters) {
-  if (dismissed && level === 'warn') return;
-  const banner = document.getElementById('alert-banner');
-  const inner  = document.getElementById('alert-inner');
+  if (dismissed && level==='warn') return;
   document.getElementById('alert-title').textContent = title;
   document.getElementById('alert-stop').textContent  = stopName;
-  document.getElementById('alert-dist').textContent  = meters + ' metros';
-  inner.className = 'alert-inner ' + level;
-  // Force reflow so animation re-triggers on danger
+  document.getElementById('alert-dist').textContent  = meters+' metros';
+  document.getElementById('alert-inner').className   = 'alert-inner '+level;
+  const banner = document.getElementById('alert-banner');
   void banner.offsetWidth;
   banner.classList.add('show');
 
-  // Voz
   if (window.speechSynthesis) {
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(
-      level === 'danger'
+      level==='danger'
         ? `¡Atención! Bajate ahora. ${stopName}.`
         : `Atención. En ${meters} metros es tu parada. ${stopName}. Preparate para bajar.`
     );
-    u.lang = 'es-UY'; u.rate = 0.95; u.pitch = 1.05;
+    u.lang='es-UY'; u.rate=0.95; u.pitch=1.05;
     window.speechSynthesis.speak(u);
   }
-
-  // Vibración
   if (navigator.vibrate)
-    navigator.vibrate(level === 'danger' ? [400,100,400,100,600] : [200,80,200]);
-
-  if (level === 'warn') setTimeout(() => { if (!alertedUrgent) banner.classList.remove('show'); }, 9000);
+    navigator.vibrate(level==='danger' ? [400,100,400,100,600] : [200,80,200]);
+  if (level==='warn') setTimeout(()=>{ if(!alertedUrgent) banner.classList.remove('show'); }, 9000);
 }
 
 function dismissAlert() {
   document.getElementById('alert-banner').classList.remove('show');
-  dismissed = true;
+  dismissed=true;
 }
 
-function setDist(d, btn) {
-  alertDist = d; alerted = false;
-  document.querySelectorAll('.dist-btn').forEach(b => b.classList.remove('sel'));
+function setDist(d,btn) {
+  alertDist=d; alerted=false;
+  document.querySelectorAll('.dist-btn').forEach(b=>b.classList.remove('sel'));
   btn.classList.add('sel');
 }
 
 // ── Render ────────────────────────────────────────────────────────────────────
-function colorFor(tab) { return tab === 'ida' ? '#00c9a7' : '#f97316'; }
+function colorFor(tab) { return tab==='ida' ? '#00c9a7' : '#f97316'; }
 
-function stopIcon(stop, tab) {
-  const c = colorFor(tab);
-  if (stop.key === 'origin')
+function stopIcon(stop,tab) {
+  const c=colorFor(tab);
+  if (stop.key==='origin')
     return L.divIcon({className:'',html:`<div class="marker-origin" style="background:${c};color:#070b18;">S</div>`,iconSize:[32,32],iconAnchor:[16,16]});
-  if (stop.key === 'dest')
+  if (stop.key==='dest')
     return L.divIcon({className:'',html:`<div class="marker-dest" style="background:${tab==='ida'?'#f97316':'#00c9a7'};color:#070b18;">B</div>`,iconSize:[32,32],iconAnchor:[16,16]});
-  const sz = stop.key === 'notable' ? 14 : 10;
+  const sz=stop.key==='notable'?14:10;
   return L.divIcon({className:'',html:`<div style="width:${sz}px;height:${sz}px;border-radius:50%;background:${c};border:2px solid #fff;box-shadow:0 0 6px rgba(0,0,0,.5);"></div>`,iconSize:[sz,sz],iconAnchor:[sz/2,sz/2]});
 }
 
 function renderTab(tab) {
-  stopMarkers.forEach(m => m.remove()); stopMarkers = [];
-  if (polyline) { polyline.remove(); polyline = null; }
+  stopMarkers.forEach(m=>m.remove()); stopMarkers=[];
+  if (polyline) { polyline.remove(); polyline=null; }
 
-  const stops = tab === 'ida' ? STOPS_IDA : STOPS_VUELTA;
-  const c     = colorFor(tab);
-  const line  = tab === 'ida' ? '183' : '181';
+  const stops=tab==='ida'?STOPS_IDA:STOPS_VUELTA;
+  const c=colorFor(tab);
+  const line=tab==='ida'?'183':'181';
 
-  polyline = L.polyline(stops.map(s=>[s.lat,s.lng]),{
-    color:c, weight:4, opacity:.85,
-    dashArray: tab==='vuelta' ? '10,6' : null, lineJoin:'round'
+  polyline=L.polyline(stops.map(s=>[s.lat,s.lng]),{
+    color:c,weight:4,opacity:.85,
+    dashArray:tab==='vuelta'?'10,6':null,lineJoin:'round'
   }).addTo(map);
 
-  stops.forEach(stop => {
-    const m = L.marker([stop.lat,stop.lng],{icon:stopIcon(stop,tab)}).addTo(map);
-    const badge = stop.badge ? `<div class="popup-sub" style="color:${c};margin-top:4px">${stop.badge}</div>` : '';
+  stops.forEach(stop=>{
+    const m=L.marker([stop.lat,stop.lng],{icon:stopIcon(stop,tab)}).addTo(map);
+    const badge=stop.badge?`<div class="popup-sub" style="color:${c};margin-top:4px">${stop.badge}</div>`:'';
     m.bindPopup(`<div class="popup-title">${stop.name}</div><div class="popup-sub">Parada ${stop.n} · Línea ${line}</div>${badge}`,{maxWidth:220});
     stopMarkers.push(m);
   });
 
   map.fitBounds(polyline.getBounds(),{padding:[20,20]});
 
-  const list = document.getElementById('stop-list');
-  list.innerHTML = '';
-  stops.forEach((stop,i) => {
-    const li = document.createElement('li');
-    li.className = 'stop-item'+(stop.key==='origin'?' origin':'')+(stop.key==='dest'?' destination':'');
-    const badgeCls = stop.key==='origin'?'badge-origin':stop.key==='dest'?'badge-dest':'badge-key';
-    const badgeEl  = stop.badge ? `<span class="stop-badge ${badgeCls}">${stop.badge}</span>` : '';
-    li.innerHTML = `
+  const list=document.getElementById('stop-list');
+  list.innerHTML='';
+  stops.forEach((stop,i)=>{
+    const li=document.createElement('li');
+    li.className='stop-item'+(stop.key==='origin'?' origin':'')+(stop.key==='dest'?' destination':'');
+    const bCls=stop.key==='origin'?'badge-origin':stop.key==='dest'?'badge-dest':'badge-key';
+    const bEl=stop.badge?`<span class="stop-badge ${bCls}">${stop.badge}</span>`:'';
+    li.innerHTML=`
       <span class="stop-num">${stop.n}</span>
       <div class="stop-dot" style="background:${stop.key?c:'var(--surface2)'};border:1.5px solid ${c};"></div>
       <span class="stop-name">${stop.name}</span>
-      ${badgeEl}
+      ${bEl}
     `;
-    li.onclick = () => {
+    li.onclick=()=>{
       stopMarkers[i].openPopup();
       map.setView([stop.lat,stop.lng],16,{animate:true});
       document.querySelectorAll('.stop-item').forEach(el=>el.classList.remove('active'));
@@ -493,15 +462,14 @@ function renderTab(tab) {
     list.appendChild(li);
   });
 
-  document.getElementById('drawer-count').textContent = stops.length + ' paradas';
-  document.getElementById('drawer-label').textContent = `LÍNEA ${line} · ${tab==='ida'?'IDA':'VUELTA'}`;
-
-  alerted = false; alertedUrgent = false; dismissed = false;
+  document.getElementById('drawer-count').textContent=stops.length+' paradas';
+  document.getElementById('drawer-label').textContent=`LÍNEA ${line} · ${tab==='ida'?'IDA':'VUELTA'}`;
+  alerted=false; alertedUrgent=false; dismissed=false;
   dismissAlert();
 }
 
 function switchTab(tab) {
-  currentTab = tab;
+  currentTab=tab;
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active-ida','active-vuelta'));
   document.querySelectorAll('.tab')[tab==='ida'?0:1].classList.add(tab==='ida'?'active-ida':'active-vuelta');
   renderTab(tab);
