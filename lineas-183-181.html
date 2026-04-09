@@ -1,351 +1,103 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="theme-color" content="#0a0f1e">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="STM 183/181">
-<title>STM · Líneas 183 / 181</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<style>
-  :root {
-    --bg:#070b18; --surface:#0e1628; --surface2:#151d35; --border:#1e2d52;
-    --accent-ida:#00c9a7; --accent-vuelta:#f97316; --accent-stop:#fbbf24;
-    --text:#e2e8f0; --text-muted:#64748b; --pill-active:#1e3a5f;
-    --alert-warn:#f59e0b; --alert-danger:#ef4444;
-  }
-  *{margin:0;padding:0;box-sizing:border-box;}
-  html,body{height:100%;overflow:hidden;font-family:'Syne',sans-serif;background:var(--bg);color:var(--text);}
-  header{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(7,11,24,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:10px 16px 0;}
-  .header-top{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
-  .logo{background:var(--accent-ida);color:#070b18;font-family:'Space Mono',monospace;font-weight:700;font-size:11px;padding:4px 8px;border-radius:4px;letter-spacing:1px;flex-shrink:0;}
-  .title-block{flex:1;min-width:0;}
-  .title-block h1{font-size:15px;font-weight:800;line-height:1;}
-  .title-block p{font-size:9px;color:var(--text-muted);margin-top:2px;font-family:'Space Mono',monospace;}
-  .gps-btn{flex-shrink:0;display:flex;align-items:center;gap:6px;padding:7px 12px;border-radius:20px;font-size:11px;font-weight:700;font-family:'Space Mono',monospace;border:1.5px solid var(--border);cursor:pointer;transition:all .25s;background:var(--surface2);color:var(--text-muted);}
-  .gps-btn.active{border-color:var(--accent-ida);color:var(--accent-ida);background:rgba(0,201,167,.1);}
-  .gps-btn.active .gps-dot{background:var(--accent-ida);animation:blink 1.5s infinite;}
-  .gps-dot{width:7px;height:7px;border-radius:50%;background:var(--text-muted);transition:background .25s;}
-  @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-  .tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;}
-  .tabs::-webkit-scrollbar{display:none;}
-  .tab{flex-shrink:0;padding:8px 14px;font-size:11px;font-weight:600;border:none;background:transparent;cursor:pointer;color:var(--text-muted);border-bottom:2px solid transparent;transition:all .2s;font-family:'Syne',sans-serif;position:relative;bottom:-1px;}
-  .tab.active-ida{color:var(--accent-ida);border-bottom-color:var(--accent-ida);}
-  .tab.active-vuelta{color:var(--accent-vuelta);border-bottom-color:var(--accent-vuelta);}
-  .alert-bar{position:fixed;top:110px;left:0;right:0;z-index:999;display:flex;align-items:center;gap:8px;padding:6px 16px;background:var(--surface);border-bottom:1px solid var(--border);font-size:11px;font-family:'Space Mono',monospace;color:var(--text-muted);}
-  .dist-btn{padding:4px 10px;border-radius:12px;font-size:10px;font-family:'Space Mono',monospace;font-weight:700;border:1px solid var(--border);cursor:pointer;background:var(--surface2);color:var(--text-muted);transition:all .2s;}
-  .dist-btn.sel{background:var(--alert-warn);color:#000;border-color:var(--alert-warn);}
-  .alert-banner{position:fixed;top:0;left:0;right:0;z-index:9999;transform:translateY(-110%);transition:transform .4s cubic-bezier(.34,1.56,.64,1);}
-  .alert-banner.show{transform:translateY(0);}
-  .alert-inner{margin:8px;border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:6px;box-shadow:0 12px 40px rgba(0,0,0,.8);}
-  .alert-inner.warn{background:#7c2d12;border:2px solid var(--alert-warn);}
-  .alert-inner.danger{background:#450a0a;border:2px solid var(--alert-danger);animation:shake .5s;}
-  @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
-  .alert-row{display:flex;justify-content:space-between;align-items:flex-start;}
-  .alert-title{font-size:20px;font-weight:800;}
-  .alert-stop{font-size:13px;font-family:'Space Mono',monospace;opacity:.85;margin-top:2px;}
-  .alert-dist{font-size:32px;font-weight:800;font-family:'Space Mono',monospace;}
-  .alert-close{background:rgba(255,255,255,.15);border:none;color:#fff;padding:5px 14px;border-radius:8px;font-size:12px;cursor:pointer;font-family:'Space Mono',monospace;}
-  .gps-status{position:absolute;bottom:200px;left:0;right:0;z-index:800;background:rgba(7,11,24,.9);border-top:1px solid var(--border);padding:7px 16px;display:none;align-items:center;justify-content:space-between;font-size:11px;font-family:'Space Mono',monospace;}
-  .gps-status.on{display:flex;}
-  .next-label{color:var(--text-muted);}
-  .next-name{color:var(--accent-stop);font-weight:700;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-  .dist-label{font-size:14px;font-weight:700;}
-  main{position:fixed;top:142px;bottom:0;left:0;right:0;display:flex;flex-direction:column;}
-  #map{flex:1;width:100%;background:#0a0f1e;}
-  .leaflet-tile{filter:brightness(.45) saturate(.6) hue-rotate(210deg);}
-  .leaflet-container{background:#070b18;}
-  .drawer{background:var(--surface);border-top:1px solid var(--border);height:200px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
-  .drawer-handle{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;border-bottom:1px solid var(--border);font-size:10px;font-family:'Space Mono',monospace;color:var(--text-muted);position:sticky;top:0;background:var(--surface);z-index:2;}
-  .stop-list{list-style:none;}
-  .stop-item{display:flex;align-items:center;gap:10px;padding:9px 16px;border-bottom:1px solid rgba(30,45,82,.5);cursor:pointer;transition:background .15s;}
-  .stop-item:hover{background:var(--surface2);}
-  .stop-item.active{background:var(--pill-active);}
-  .stop-item.origin{background:rgba(0,201,167,.08);}
-  .stop-item.destination{background:rgba(249,115,22,.08);}
-  .stop-item.nearby{background:rgba(245,158,11,.1);}
-  .stop-num{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-muted);width:20px;text-align:right;flex-shrink:0;}
-  .stop-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
-  .stop-name{font-size:12px;font-weight:600;flex:1;}
-  .stop-badge{font-size:9px;font-family:'Space Mono',monospace;padding:2px 6px;border-radius:3px;flex-shrink:0;font-weight:700;letter-spacing:.5px;}
-  .badge-origin{background:rgba(0,201,167,.2);color:var(--accent-ida);}
-  .badge-dest{background:rgba(249,115,22,.2);color:var(--accent-vuelta);}
-  .badge-key{background:rgba(251,191,36,.15);color:var(--accent-stop);}
-  .marker-origin,.marker-dest{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;border:2px solid white;box-shadow:0 0 16px rgba(0,0,0,.8);}
-  .marker-you{width:18px;height:18px;border-radius:50%;background:#3b82f6;border:3px solid #fff;box-shadow:0 0 0 5px rgba(59,130,246,.25),0 0 18px rgba(59,130,246,.6);}
-  .leaflet-popup-content-wrapper{background:var(--surface2)!important;border:1px solid var(--border)!important;border-radius:8px!important;box-shadow:0 8px 32px rgba(0,0,0,.6)!important;color:var(--text)!important;font-family:'Syne',sans-serif!important;}
-  .leaflet-popup-tip{background:var(--surface2)!important;}
-  .leaflet-popup-content{font-size:13px;line-height:1.5;}
-  .popup-title{font-weight:800;font-size:14px;margin-bottom:4px;}
-  .popup-sub{font-size:11px;color:var(--text-muted);font-family:'Space Mono',monospace;}
-  .leaflet-control-zoom a{background:var(--surface2)!important;color:var(--text)!important;border-color:var(--border)!important;}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alerta Paradas</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 20px; transition: background 0.3s; }
+        #estado { font-size: 24px; font-weight: bold; margin-top: 30px; padding: 20px; border-radius: 10px; }
+        button { font-size: 20px; padding: 15px 40px; margin-top: 30px; border-radius: 8px; border: none; background-color: #333; color: white; cursor: pointer; }
+        .viajando { background-color: #f4f4f4; color: #333; }
+        .alerta { background-color: #d32f2f; color: white; }
+    </style>
 </head>
-<body>
+<body class="viajando">
 
-<div class="alert-banner" id="alert-banner">
-  <div class="alert-inner warn" id="alert-inner">
-    <div class="alert-row">
-      <div>
-        <div class="alert-title" id="alert-title">⚠️ PREPARATE PARA BAJAR</div>
-        <div class="alert-stop"  id="alert-stop">—</div>
-      </div>
-      <button class="alert-close" onclick="dismissAlert()">✕ OK</button>
-    </div>
-    <div class="alert-dist" id="alert-dist">200m</div>
-  </div>
-</div>
+    <h1>Alerta de Paradas</h1>
+    
+    <div id="estado">Presiona Iniciar al subirte al ómnibus</div>
+    <button onclick="iniciarRastreo()">Iniciar Rastreo</button>
 
-<header>
-  <div class="header-top">
-    <div class="logo">STM</div>
-    <div class="title-block">
-      <h1>Líneas 183 / 181</h1>
-      <p>Montevideo · Larrañaga ↔ Arquitectura</p>
-    </div>
-    <button class="gps-btn" id="gps-btn" onclick="toggleGPS()">
-      <div class="gps-dot"></div>
-      <span id="gps-label">GPS</span>
-    </button>
-  </div>
-  <div class="tabs">
-    <button class="tab active-ida"  onclick="switchTab('ida')">🟢 183 IDA</button>
-    <button class="tab"             onclick="switchTab('vuelta')">🟠 181 VUELTA</button>
-  </div>
-</header>
+    <script>
+        // Coordenadas de las paradas exactas de bajada
+        const paradasDestino = {
+            ida: { lat: -34.9095, lng: -56.1645, nombre: "Parada Bv. España (Ida a Hit)" }, // Aprox Bv España y Obligado
+            vuelta: { lat: -34.8770, lng: -56.1664, nombre: "Parada Bv. Artigas y Pedernal" }
+        };
 
-<div class="alert-bar">
-  <span>🔔 Avisar a:</span>
-  <button class="dist-btn"     onclick="setDist(150,this)">150m</button>
-  <button class="dist-btn sel" onclick="setDist(200,this)">200m</button>
-  <button class="dist-btn"     onclick="setDist(300,this)">300m</button>
-  <span style="margin-left:auto;font-size:10px;color:var(--text-muted);" id="acc-label"></span>
-</div>
+        const RADIO_ALERTA = 150;
+        let watchId = null;
+        let alertaActiva = false;
 
-<main>
-  <div style="position:relative;flex:1;display:flex;flex-direction:column;">
-    <div id="map"></div>
-    <div class="gps-status" id="gps-status">
-      <div>
-        <div class="next-label">PRÓXIMA PARADA</div>
-        <div class="next-name" id="status-next">—</div>
-      </div>
-      <div class="dist-label" id="status-dist" style="color:var(--accent-stop);">—</div>
-    </div>
-  </div>
-  <div class="drawer">
-    <div class="drawer-handle">
-      <span id="drawer-label">PARADAS DEL RECORRIDO</span>
-      <span id="drawer-count" style="color:var(--text)"></span>
-    </div>
-    <ul class="stop-list" id="stop-list"></ul>
-  </div>
-</main>
+        function calcularDistancia(lat1, lon1, lat2, lon2) {
+            const R = 6371e3; 
+            const p1 = lat1 * Math.PI/180;
+            const p2 = lat2 * Math.PI/180;
+            const dp = (lat2-lat1) * Math.PI/180;
+            const dl = (lon2-lon1) * Math.PI/180;
+            const a = Math.sin(dp/2) * Math.sin(dp/2) + Math.cos(p1) * Math.cos(p2) * Math.sin(dl/2) * Math.sin(dl/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c; 
+        }
 
-<script>
-// ── Data ──────────────────────────────────────────────────────────────────────
+        function detonarAlerta(mensaje) {
+            if (!alertaActiva) {
+                alertaActiva = true;
+                document.body.className = "alerta";
+                document.getElementById('estado').innerText = mensaje;
+                
+                // Sonido
+                let audio = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
+                audio.loop = true; // Repite el pitido
+                audio.play().catch(e => console.log("Audio bloqueado por el navegador."));
+                
+                // Vibración
+                if ("vibrate" in navigator) {
+                    navigator.vibrate([500, 200, 500, 200, 1000]);
+                }
+            }
+        }
 
-// 183 IDA: Bv. Artigas & Pedernal → Fac. Arquitectura
-// Parada de bajada: coordenadas exactas -34.9113896, -56.1629784
-const STOPS_IDA = [
-  { n:1,  name:"Bv. Artigas & Pedernal",           lat:-34.8765,    lng:-56.1670,    key:"origin",  badge:"SUBIDA"  },
-  { n:2,  name:"Bv. Artigas & Melián Lafinur",     lat:-34.8780,    lng:-56.1667 },
-  { n:3,  name:"Bv. Artigas & Gallinal",           lat:-34.8800,    lng:-56.1664 },
-  { n:4,  name:"Bv. Artigas & Jackson",            lat:-34.8825,    lng:-56.1660 },
-  { n:5,  name:"Bv. Artigas & Av. Italia",         lat:-34.8855,    lng:-56.1655,    key:"notable", badge:"ITALIA"  },
-  { n:6,  name:"Bv. Artigas & Canstatt",           lat:-34.8875,    lng:-56.1652 },
-  { n:7,  name:"Bv. Artigas & Garibaldi",          lat:-34.8895,    lng:-56.1648 },
-  { n:8,  name:"Bv. Artigas & Larrañaga",          lat:-34.8920,    lng:-56.1644 },
-  { n:9,  name:"Bv. Artigas & Dr. Ferrer Serra",   lat:-34.8945,    lng:-56.1640 },
-  { n:10, name:"Bv. España & Ellauri",             lat:-34.8975,    lng:-56.1622 },
-  { n:11, name:"Bv. España & Guayabos",            lat:-34.9000,    lng:-56.1610 },
-  { n:12, name:"Bv. España & J.B. Blanco",         lat:-34.9020,    lng:-56.1590 },
-  { n:13, name:"Rbla. Rep. del Perú & Ellauri",    lat:-34.9045,    lng:-56.1572 },
-  { n:14, name:"Fac. Arquitectura (Bv. Artigas)",  lat:-34.9113896, lng:-56.1629784, key:"dest",    badge:"BAJADA"  },
-];
+        function verificarUbicacion(posicion) {
+            const miLat = posicion.coords.latitude;
+            const miLng = posicion.coords.longitude;
+            const divEstado = document.getElementById('estado');
 
-// 181 VUELTA: Parada 3968 (Bv. España & Luis Franzini) → Bv. Artigas & Pedernal
-// Parada de subida: coordenadas exactas -34.9122476, -56.1591348
-const STOPS_VUELTA = [
-  { n:1,  name:"Bv. España & Luis Franzini",       lat:-34.9122476, lng:-56.1591348, key:"origin",  badge:"SUBIDA · #3968" },
-  { n:2,  name:"Bv. España & J.B. Blanco",         lat:-34.9020,    lng:-56.1590 },
-  { n:3,  name:"Bv. España & Guayabos",            lat:-34.9000,    lng:-56.1610 },
-  { n:4,  name:"Bv. España & Ellauri",             lat:-34.8975,    lng:-56.1622 },
-  { n:5,  name:"Bv. Artigas & Dr. Ferrer Serra",   lat:-34.8945,    lng:-56.1640 },
-  { n:6,  name:"Bv. Artigas & Larrañaga",          lat:-34.8920,    lng:-56.1644 },
-  { n:7,  name:"Bv. Artigas & Garibaldi",          lat:-34.8895,    lng:-56.1648 },
-  { n:8,  name:"Bv. Artigas & Canstatt",           lat:-34.8875,    lng:-56.1652 },
-  { n:9,  name:"Bv. Artigas & Av. Italia",         lat:-34.8855,    lng:-56.1655,    key:"notable", badge:"ITALIA"  },
-  { n:10, name:"Bv. Artigas & Jackson",            lat:-34.8825,    lng:-56.1660 },
-  { n:11, name:"Bv. Artigas & Gallinal",           lat:-34.8800,    lng:-56.1664 },
-  { n:12, name:"Bv. Artigas & Melián Lafinur",     lat:-34.8780,    lng:-56.1667 },
-  { n:13, name:"Bv. Artigas & Pedernal",           lat:-34.8765,    lng:-56.1670,    key:"dest",    badge:"BAJADA"  },
-];
+            const distIda = calcularDistancia(miLat, miLng, paradasDestino.ida.lat, paradasDestino.ida.lng);
+            const distVuelta = calcularDistancia(miLat, miLng, paradasDestino.vuelta.lat, paradasDestino.vuelta.lng);
 
-// ── State ─────────────────────────────────────────────────────────────────────
-let currentTab='ida', alertDist=200, gpsActive=false, watchId=null;
-let userMarker=null, accCircle=null;
-let alerted=false, alertedUrgent=false, dismissed=false;
-let polyline=null, stopMarkers=[];
+            if (distIda <= RADIO_ALERTA) {
+                detonarAlerta("¡TOCA TIMBRE! A 150m de la parada en Bv. España.");
+            } else if (distVuelta <= RADIO_ALERTA) {
+                detonarAlerta("¡TOCA TIMBRE! A 150m de Pedernal.");
+            } else {
+                alertaActiva = false;
+                let distMinima = Math.min(distIda, distVuelta);
+                let proxDestino = distIda < distVuelta ? "Bv. España" : "Pedernal";
+                
+                divEstado.innerText = "Rastreando... A " + Math.round(distMinima) + "m de la parada de " + proxDestino;
+                document.body.className = "viajando";
+            }
+        }
 
-// ── Map ───────────────────────────────────────────────────────────────────────
-const map=L.map('map',{zoomControl:true,attributionControl:false});
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}).addTo(map);
+        function iniciarRastreo() {
+            if ("geolocation" in navigator) {
+                document.getElementById('estado').innerText = "Conectando con GPS...";
+                
+                // Forzar permiso de audio con un sonido en blanco
+                let audioInit = new Audio('data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA');
+                audioInit.play().catch(e => {});
 
-function dist(lat1,lng1,lat2,lng2){
-  const R=6371000,r=Math.PI/180,dLat=(lat2-lat1)*r,dLng=(lng2-lng1)*r;
-  const a=Math.sin(dLat/2)**2+Math.cos(lat1*r)*Math.cos(lat2*r)*Math.sin(dLng/2)**2;
-  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
-}
-
-function toggleGPS(){gpsActive?stopGPS():startGPS();}
-
-function startGPS(){
-  if(!navigator.geolocation){alert('Tu dispositivo no soporta GPS.');return;}
-  gpsActive=true;alerted=false;alertedUrgent=false;dismissed=false;
-  document.getElementById('gps-btn').classList.add('active');
-  document.getElementById('gps-label').textContent='ON';
-  document.getElementById('gps-status').classList.add('on');
-  watchId=navigator.geolocation.watchPosition(onPos,onErr,{enableHighAccuracy:true,maximumAge:3000,timeout:10000});
-}
-
-function stopGPS(){
-  if(watchId!==null){navigator.geolocation.clearWatch(watchId);watchId=null;}
-  gpsActive=false;
-  document.getElementById('gps-btn').classList.remove('active');
-  document.getElementById('gps-label').textContent='GPS';
-  document.getElementById('gps-status').classList.remove('on');
-  document.getElementById('acc-label').textContent='';
-  if(userMarker){userMarker.remove();userMarker=null;}
-  if(accCircle){accCircle.remove();accCircle=null;}
-  dismissAlert();
-}
-
-function onErr(){document.getElementById('acc-label').textContent='⚠ Sin señal';}
-
-function onPos(pos){
-  const{latitude:lat,longitude:lng,accuracy:acc}=pos.coords;
-  const stops=currentTab==='ida'?STOPS_IDA:STOPS_VUELTA;
-  const dest=stops[stops.length-1];
-  const icon=L.divIcon({className:'',html:'<div class="marker-you"></div>',iconSize:[18,18],iconAnchor:[9,9]});
-  if(!userMarker)userMarker=L.marker([lat,lng],{icon,zIndexOffset:1000}).addTo(map);
-  else userMarker.setLatLng([lat,lng]);
-  if(!accCircle)accCircle=L.circle([lat,lng],{radius:acc,color:'#3b82f6',fillColor:'#3b82f6',fillOpacity:.07,weight:1}).addTo(map);
-  else accCircle.setLatLng([lat,lng]).setRadius(acc);
-
-  const distDest=dist(lat,lng,dest.lat,dest.lng);
-  let closest=null,closestD=Infinity;
-  stops.forEach(s=>{const d=dist(lat,lng,s.lat,s.lng);if(d<closestD){closestD=d;closest=s;}});
-
-  document.getElementById('status-next').textContent=closest?closest.name:'—';
-  document.getElementById('status-dist').textContent=distDest<1000
-    ?Math.round(distDest)+'m de tu parada'
-    :(distDest/1000).toFixed(1)+'km de tu parada';
-  document.getElementById('acc-label').textContent='±'+Math.round(acc)+'m';
-
-  document.querySelectorAll('.stop-item').forEach((el,i)=>{
-    el.classList.remove('nearby');
-    if(closest&&stops[i]&&stops[i].n===closest.n)el.classList.add('nearby');
-  });
-
-  if(!alerted&&distDest<=alertDist&&distDest>60){
-    alerted=true;fireAlert('warn','⚠️ PREPARATE PARA BAJAR',dest.name,Math.round(distDest));
-  }
-  if(!alertedUrgent&&distDest<=60){
-    alertedUrgent=true;fireAlert('danger','🚨 ¡BAJATE AHORA!',dest.name,Math.round(distDest));
-  }
-  if(distDest>alertDist+150){alerted=false;alertedUrgent=false;dismissed=false;}
-}
-
-function fireAlert(level,title,stopName,meters){
-  if(dismissed&&level==='warn')return;
-  document.getElementById('alert-title').textContent=title;
-  document.getElementById('alert-stop').textContent=stopName;
-  document.getElementById('alert-dist').textContent=meters+' metros';
-  document.getElementById('alert-inner').className='alert-inner '+level;
-  const banner=document.getElementById('alert-banner');
-  void banner.offsetWidth;
-  banner.classList.add('show');
-  if(window.speechSynthesis){
-    window.speechSynthesis.cancel();
-    const u=new SpeechSynthesisUtterance(
-      level==='danger'
-        ?`¡Atención! Bajate ahora. ${stopName}.`
-        :`Atención. En ${meters} metros es tu parada. ${stopName}. Preparate para bajar.`
-    );
-    u.lang='es-UY';u.rate=0.95;u.pitch=1.05;
-    window.speechSynthesis.speak(u);
-  }
-  if(navigator.vibrate)navigator.vibrate(level==='danger'?[400,100,400,100,600]:[200,80,200]);
-  if(level==='warn')setTimeout(()=>{if(!alertedUrgent)banner.classList.remove('show');},9000);
-}
-
-function dismissAlert(){document.getElementById('alert-banner').classList.remove('show');dismissed=true;}
-
-function setDist(d,btn){
-  alertDist=d;alerted=false;
-  document.querySelectorAll('.dist-btn').forEach(b=>b.classList.remove('sel'));
-  btn.classList.add('sel');
-}
-
-function colorFor(tab){return tab==='ida'?'#00c9a7':'#f97316';}
-
-function stopIcon(stop,tab){
-  const c=colorFor(tab);
-  if(stop.key==='origin')return L.divIcon({className:'',html:`<div class="marker-origin" style="background:${c};color:#070b18;">S</div>`,iconSize:[32,32],iconAnchor:[16,16]});
-  if(stop.key==='dest')return L.divIcon({className:'',html:`<div class="marker-dest" style="background:${tab==='ida'?'#f97316':'#00c9a7'};color:#070b18;">B</div>`,iconSize:[32,32],iconAnchor:[16,16]});
-  const sz=stop.key==='notable'?14:10;
-  return L.divIcon({className:'',html:`<div style="width:${sz}px;height:${sz}px;border-radius:50%;background:${c};border:2px solid #fff;box-shadow:0 0 6px rgba(0,0,0,.5);"></div>`,iconSize:[sz,sz],iconAnchor:[sz/2,sz/2]});
-}
-
-function renderTab(tab){
-  stopMarkers.forEach(m=>m.remove());stopMarkers=[];
-  if(polyline){polyline.remove();polyline=null;}
-  const stops=tab==='ida'?STOPS_IDA:STOPS_VUELTA;
-  const c=colorFor(tab),line=tab==='ida'?'183':'181';
-  polyline=L.polyline(stops.map(s=>[s.lat,s.lng]),{color:c,weight:4,opacity:.85,dashArray:tab==='vuelta'?'10,6':null,lineJoin:'round'}).addTo(map);
-  stops.forEach(stop=>{
-    const m=L.marker([stop.lat,stop.lng],{icon:stopIcon(stop,tab)}).addTo(map);
-    const badge=stop.badge?`<div class="popup-sub" style="color:${c};margin-top:4px">${stop.badge}</div>`:'';
-    m.bindPopup(`<div class="popup-title">${stop.name}</div><div class="popup-sub">Parada ${stop.n} · Línea ${line}</div>${badge}`,{maxWidth:220});
-    stopMarkers.push(m);
-  });
-  map.fitBounds(polyline.getBounds(),{padding:[20,20]});
-  const list=document.getElementById('stop-list');
-  list.innerHTML='';
-  stops.forEach((stop,i)=>{
-    const li=document.createElement('li');
-    li.className='stop-item'+(stop.key==='origin'?' origin':'')+(stop.key==='dest'?' destination':'');
-    const bCls=stop.key==='origin'?'badge-origin':stop.key==='dest'?'badge-dest':'badge-key';
-    const bEl=stop.badge?`<span class="stop-badge ${bCls}">${stop.badge}</span>`:'';
-    li.innerHTML=`<span class="stop-num">${stop.n}</span><div class="stop-dot" style="background:${stop.key?c:'var(--surface2)'};border:1.5px solid ${c};"></div><span class="stop-name">${stop.name}</span>${bEl}`;
-    li.onclick=()=>{
-      stopMarkers[i].openPopup();
-      map.setView([stop.lat,stop.lng],16,{animate:true});
-      document.querySelectorAll('.stop-item').forEach(el=>el.classList.remove('active'));
-      li.classList.add('active');
-    };
-    list.appendChild(li);
-  });
-  document.getElementById('drawer-count').textContent=stops.length+' paradas';
-  document.getElementById('drawer-label').textContent=`LÍNEA ${line} · ${tab==='ida'?'IDA':'VUELTA'}`;
-  alerted=false;alertedUrgent=false;dismissed=false;dismissAlert();
-}
-
-function switchTab(tab){
-  currentTab=tab;
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active-ida','active-vuelta'));
-  document.querySelectorAll('.tab')[tab==='ida'?0:1].classList.add(tab==='ida'?'active-ida':'active-vuelta');
-  renderTab(tab);
-}
-
-renderTab('ida');
-</script>
+                watchId = navigator.geolocation.watchPosition(
+                    verificarUbicacion,
+                    (error) => alert("Error GPS: " + error.message),
+                    { enableHighAccuracy: true, maximumAge: 0, timeout: 5000 }
+                );
+            } else {
+                alert("Geolocalización no soportada.");
+            }
+        }
+    </script>
 </body>
 </html>
